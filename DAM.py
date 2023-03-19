@@ -49,6 +49,30 @@ def plotPressure(x, fx):
     return
 
 
+def F_piston(rpm, theta,D,R,m_piston,m_bielle):
+    """
+    :param rpm: Vitesse de rotation en RPM
+    :param theta: Valeur de l'angle de rotation
+    :param D: Valeur du diametre du piston
+    :param R: Valeur du rayon de vilbrequin
+    :param pressure: Valeur de la pression
+    :param m_piston: Valeur de la masse du piston
+    :param m_bielle: Valeur de la masse de la bielle
+    la fonction retourne la valeure de la force max et min exercée sur la bielle 
+    """
+    vit_ang = rpm*(np.pi/30)
+    F_tete = (((np.pi*D**2)/4)*DV(theta))-(m_piston*R*vit_ang**2*np.cos(theta))
+    F_pied = -(((np.pi*D**2)/4)*DV(theta)) + ((m_piston+m_bielle)*R*vit_ang**2*np.cos(theta)) 
+    F_pied_min=min(F_pied)
+    F_pied_max=max(F_pied)
+    F_tete_min=min(F_tete)
+    F_tete_max=max(F_tete)
+    F_max=max(F_pied_max,F_tete_max)
+    F_min=min(F_pied_min,F_tete_min)
+    return F_max,F_min
+
+
+
 def myfunc(rpm, s, theta, thetaC, deltaThetaC):
     """ 
     dimBielle dimensionnement d'une bielle
@@ -96,6 +120,8 @@ def main():
 
     fx = DV(theta)
     plotPressure(theta, fx)
+
+    F=F_piston()
 
     return
 
